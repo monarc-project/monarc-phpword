@@ -10,9 +10,9 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
- * @license     http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt LGPL
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2017 PHPWord contributors
+ * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Collection;
@@ -51,9 +51,9 @@ abstract class AbstractCollection
     {
         if (array_key_exists($index, $this->items)) {
             return $this->items[$index];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -61,7 +61,6 @@ abstract class AbstractCollection
      *
      * @param int $index
      * @param mixed $item
-     * @return void
      */
     public function setItem($index, $item)
     {

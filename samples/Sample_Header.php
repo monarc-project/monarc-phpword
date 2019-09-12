@@ -1,22 +1,22 @@
 <?php
-require_once __DIR__ . '/../src/PhpWord/Autoloader.php';
+require_once __DIR__ . '/../bootstrap.php';
 
-date_default_timezone_set('UTC');
-
-/**
- * Header file
- */
-use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
 
+date_default_timezone_set('UTC');
 error_reporting(E_ALL);
 define('CLI', (PHP_SAPI == 'cli') ? true : false);
 define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
 
-Autoloader::register();
 Settings::loadConfig();
+
+$dompdfPath = $vendorDirPath . '/dompdf/dompdf';
+if (file_exists($dompdfPath)) {
+    define('DOMPDF_ENABLE_AUTOLOAD', false);
+    Settings::setPdfRenderer(Settings::PDF_RENDERER_DOMPDF, $vendorDirPath . '/dompdf/dompdf');
+}
 
 // Set writers
 $writers = array('Word2007' => 'docx', 'ODText' => 'odt', 'RTF' => 'rtf', 'HTML' => 'html', 'PDF' => 'pdf');
@@ -25,6 +25,9 @@ $writers = array('Word2007' => 'docx', 'ODText' => 'odt', 'RTF' => 'rtf', 'HTML'
 if (null === Settings::getPdfRendererPath()) {
     $writers['PDF'] = null;
 }
+
+// Turn output escaping on
+Settings::setOutputEscapingEnabled(true);
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -92,8 +95,8 @@ function getEndingNotes($writers)
 
     // Do not show execution time for index
     if (!IS_INDEX) {
-        $result .= date('H:i:s') . " Done writing file(s)" . EOL;
-        $result .= date('H:i:s') . " Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB" . EOL;
+        $result .= date('H:i:s') . ' Done writing file(s)' . EOL;
+        $result .= date('H:i:s') . ' Peak memory usage: ' . (memory_get_peak_usage(true) / 1024 / 1024) . ' MB' . EOL;
     }
 
     // Return

@@ -10,14 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2017 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Style;
 
-use PhpOffice\PhpWord\Shared\XMLWriter;
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Style;
 use PhpOffice\PhpWord\Style\Paragraph as ParagraphStyle;
 use PhpOffice\PhpWord\Writer\Word2007\Element\ParagraphAlignment;
@@ -45,8 +45,6 @@ class Paragraph extends AbstractStyle
 
     /**
      * Write style.
-     *
-     * @return void
      */
     public function write()
     {
@@ -70,8 +68,6 @@ class Paragraph extends AbstractStyle
 
     /**
      * Write full style.
-     *
-     * @return void
      */
     private function writeStyle()
     {
@@ -107,6 +103,15 @@ class Paragraph extends AbstractStyle
             $xmlWriter->endElement();
         }
 
+        //Right to left
+        $xmlWriter->writeElementIf($styles['bidi'] === true, 'w:bidi');
+
+        //Paragraph contextualSpacing
+        $xmlWriter->writeElementIf($styles['contextualSpacing'] === true, 'w:contextualSpacing');
+
+        //Paragraph contextualSpacing
+        $xmlWriter->writeElementIf($styles['textAlignment'] !== null, 'w:textAlignment', 'w:val', $styles['textAlignment']);
+
         // Child style: alignment, indentation, spacing, and shading
         $this->writeChildStyle($xmlWriter, 'Indentation', $styles['indentation']);
         $this->writeChildStyle($xmlWriter, 'Spacing', $styles['spacing']);
@@ -138,14 +143,13 @@ class Paragraph extends AbstractStyle
     /**
      * Write tabs.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param \PhpOffice\PhpWord\Style\Tab[] $tabs
-     * @return void
      */
     private function writeTabs(XMLWriter $xmlWriter, $tabs)
     {
         if (!empty($tabs)) {
-            $xmlWriter->startElement("w:tabs");
+            $xmlWriter->startElement('w:tabs');
             foreach ($tabs as $tab) {
                 $styleWriter = new Tab($xmlWriter, $tab);
                 $styleWriter->write();
@@ -157,9 +161,8 @@ class Paragraph extends AbstractStyle
     /**
      * Write numbering.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param array $numbering
-     * @return void
      */
     private function writeNumbering(XMLWriter $xmlWriter, $numbering)
     {
@@ -188,7 +191,6 @@ class Paragraph extends AbstractStyle
      * Set without w:pPr.
      *
      * @param bool $value
-     * @return void
      */
     public function setWithoutPPR($value)
     {
@@ -199,7 +201,6 @@ class Paragraph extends AbstractStyle
      * Set is inline.
      *
      * @param bool $value
-     * @return void
      */
     public function setIsInline($value)
     {

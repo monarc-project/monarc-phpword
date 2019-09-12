@@ -10,15 +10,15 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2017 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Reader\ODText;
 
+use PhpOffice\Common\XMLReader;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Shared\XMLReader;
 
 /**
  * Content reader
@@ -31,7 +31,6 @@ class Content extends AbstractPart
      * Read content.xml.
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
-     * @return void
      */
     public function read(PhpWord $phpWord)
     {
@@ -44,16 +43,13 @@ class Content extends AbstractPart
             foreach ($nodes as $node) {
                 // $styleName = $xmlReader->getAttribute('text:style-name', $node);
                 switch ($node->nodeName) {
-
                     case 'text:h': // Heading
                         $depth = $xmlReader->getAttribute('text:outline-level', $node);
                         $section->addTitle($node->nodeValue, $depth);
                         break;
-
                     case 'text:p': // Paragraph
                         $section->addText($node->nodeValue);
                         break;
-
                     case 'text:list': // List
                         $listItems = $xmlReader->getElements('text:list-item/text:p', $node);
                         foreach ($listItems as $listItem) {
